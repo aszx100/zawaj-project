@@ -409,6 +409,8 @@
                 <div class="info-row" style="margin-top:10px; padding-top:5px; border-top:1px dashed #ccc; font-size:12px; color:#ad1457">
                     <strong>طلبها في الشريك:</strong> سن ${data.target_age || '--'} | بشرة ${data.target_skin || '--'} | شروط: ${data.target_conds || 'لا يوجد'}
                 </div>
+                <!-- زر الحذف يظهر للأدمن فقط -->
+                ${localStorage.getItem('isAdmin') === 'true' ? `<button onclick="deleteCard('${doc.id}')" style="margin-top:10px; background:red; color:white; border:none; padding:5px 10px; cursor:pointer;">حذف الاستمارة</button>` : ''}
             `;
             listDiv.appendChild(card);
         });
@@ -417,6 +419,43 @@
             listDiv.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--gray)">لا توجد نتائج تطابق البحث.</p>';
         }
     }
+
+    // وظيفة الحذف
+    window.deleteCard = async function(docId) {
+        if(confirm('هل أنت متأكد من حذف هذه الاستمارة نهائياً؟')) {
+            try {
+                const { deleteDoc, doc } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+                await deleteDoc(doc(db, "brides", docId));
+                alert('تم الحذف بنجاح!');
+                location.reload();
+            } catch(e) { alert('خطأ في الحذف!'); }
+        }
+    }
+</script>
+
+<!-- نافذة دخول الإدارة -->
+<div id="admin-login-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:20px; border:1px solid #ccc; z-index:9999;">
+    <input type="password" id="admin-pass" placeholder="كلمة سر الإدارة">
+    <button onclick="checkAdmin()">دخول</button>
+</div>
+
+<script>
+    function checkAdmin() {
+        const pass = document.getElementById('admin-pass').value;
+        if (pass === '123456') {
+            localStorage.setItem('isAdmin', 'true');
+            alert('تم تفعيل وضع الإدارة');
+            location.reload();
+        } else {
+            alert('كلمة سر خاطئة');
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'q') {
+            document.getElementById('admin-login-modal').style.display = 'block';
+        }
+    });
 </script>
 
 </body>
