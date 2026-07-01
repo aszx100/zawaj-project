@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة لتسكنوا</title>
     <style>
-        :root { --primary: #d81b60; --primary-light: #f8bbd0; --primary-hover: #ad1457; --dark: #2c3e50; --light: #f5f6fa; --gray: #7f8c8d; }
-        /* ستايل الوضع المظلم */
-        body.dark-mode { background-color: #121212; color: #ffffff; }
-        body.dark-mode .bride-card, body.dark-mode .search-section, body.dark-mode .top-bar { background-color: #1e1e1e; border-color: #333; color: #eee; }
+        :root { --primary: #d81b60; --primary-light: #f8bbd0; --primary-hover: #ad1457; --dark: #2c3e50; --light: #f5f6fa; }
         
+        /* الوضع المظلم (يُفعل عند دخول الإدارة) */
+        body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
+        body.dark-mode .bride-card, body.dark-mode .search-section, body.dark-mode .top-bar, body.dark-mode .form-section { background-color: #1e1e1e !important; color: #fff !important; border-color: #333 !important; }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background-color: var(--light); color: var(--dark); transition: 0.3s; }
         .container { max-width: 1100px; margin: auto; padding: 20px; }
@@ -22,69 +23,80 @@
 <body>
 
 <div class="container">
-    <!-- المحتوى كما هو ولكن تمت إضافة سكريبت موحد بالأسفل -->
-    <div id="mainSection" class="hidden">
-        <div class="top-bar"><h2>لوحة التحكم</h2></div>
-        <div id="usersList">جاري التحميل...</div>
+    <div id="mainSection">
+        <h2 style="text-align:center; margin-bottom:20px;">📋 طلبات العرائس</h2>
+        <div id="usersList">جاري جلب البيانات...</div>
     </div>
 </div>
 
-<!-- زر دخول الإدارة السهل (في أقصى أسفل الصفحة) -->
-<div style="text-align:center; padding:20px; opacity:0.3;" onclick="document.getElementById('admin-login-modal').style.display='block'">⚙️</div>
+<!-- زر مخفي لدخول الإدارة (في أسفل الصفحة) -->
+<div style="text-align:center; margin-top:50px; opacity:0.1; cursor:pointer;" onclick="document.getElementById('admin-login-modal').style.display='block'">⚙️ الإعدادات</div>
 
-<div id="admin-login-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:20px; border-radius:10px; z-index:9999;">
-    <input type="password" id="admin-pass" placeholder="كلمة السر">
-    <button onclick="checkAdmin()">دخول</button>
+<!-- نافذة دخول الإدارة -->
+<div id="admin-login-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:30px; border:2px solid var(--primary); border-radius:15px; z-index:9999; box-shadow:0 0 20px rgba(0,0,0,0.5);">
+    <h3 style="color:var(--primary); margin-bottom:15px;">دخول لوحة الإدارة</h3>
+    <input type="password" id="admin-pass" placeholder="كلمة سر الإدارة" style="width:100%; padding:10px; margin-bottom:15px;">
+    <button onclick="checkAdmin()" class="btn btn-main" style="width:100%;">دخول</button>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    const app = initializeApp({ projectId: "zawaj-site" });
+    const firebaseConfig = {
+        apiKey: "AIzaSyDT9_qSGi7zsqLmscnGK7VNvIJdzNaVGK0",
+        projectId: "zawaj-site"
+    };
+    
+    const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const auth = getAuth(app);
 
-    // تفعيل المظلم عند التحميل إذا كان الأدمن مسجلاً
-    if (localStorage.getItem('isAdmin') === 'true') document.body.classList.add('dark-mode');
-
-    window.loadUsers = async function() {
-        const listDiv = document.getElementById('usersList');
-        const querySnapshot = await getDocs(collection(db, "brides"));
-        listDiv.innerHTML = '';
-        querySnapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            const card = document.createElement('div');
-            card.className = 'bride-card';
-            card.innerHTML = `
-                <div>كود: ${data.code || '--'}</div>
-                ${localStorage.getItem('isAdmin') === 'true' ? `<button style="background:red; color:white;" onclick="deleteCard('${docSnap.id}')">حذف</button>` : ''}
-            `;
-            listDiv.appendChild(card);
-        });
+    // التحقق من وضع الإدارة عند تحميل الصفحة
+    if (localStorage.getItem('isAdmin') === 'true') {
+        document.body.classList.add('dark-mode');
     }
 
-    window.deleteCard = async (id) => {
-        if(confirm('تأكيد الحذف؟')) {
+    // وظيفة جلب وعرض البيانات
+    window.loadUsers = async function() {
+        const listDiv = document.getElementById('usersList');
+        try {
+            const querySnapshot = await getDocs(collection(db, "brides"));
+            listDiv.innerHTML = '';
+            querySnapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const card = document.createElement('div');
+                card.className = 'bride-card';
+                card.innerHTML = `
+                    <div style="font-weight:bold; margin-bottom:10px;">كود العروسة: ${data.code || '--'}</div>
+                    <div style="font-size:14px; margin-bottom:10px;">السن: ${data.age || '--'} سنة</div>
+                    ${localStorage.getItem('isAdmin') === 'true' ? `<button style="background:red; color:white; border:none; padding:5px 15px; border-radius:5px; cursor:pointer;" onclick="deleteCard('${docSnap.id}')">حذف الاستمارة</button>` : ''}
+                `;
+                listDiv.appendChild(card);
+            });
+        } catch (e) { listDiv.innerHTML = "خطأ في تحميل البيانات."; }
+    }
+
+    // وظيفة الحذف
+    window.deleteCard = async function(id) {
+        if(confirm('هل أنت متأكد من حذف هذه الاستمارة؟')) {
             await deleteDoc(doc(db, "brides", id));
             location.reload();
         }
     }
 
-    window.checkAdmin = () => {
-        if(document.getElementById('admin-pass').value === '123456') {
+    // وظيفة دخول الإدارة
+    window.checkAdmin = function() {
+        const pass = document.getElementById('admin-pass').value;
+        if(pass === '123456') {
             localStorage.setItem('isAdmin', 'true');
             location.reload();
-        } else { alert('خطأ'); }
+        } else {
+            alert('كلمة سر خاطئة!');
+        }
     }
 
-    onAuthStateChanged(auth, (user) => {
-        if(user) {
-            document.getElementById('mainSection').classList.remove('hidden');
-            loadUsers();
-        }
-    });
+    loadUsers();
 </script>
+
 </body>
 </html>
