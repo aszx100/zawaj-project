@@ -247,6 +247,8 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    // استيراد مكتبة الـ App Check لتفعيل الأمان
+    import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app-check.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDT9_qSGi7zsqLmscnGK7VNvIJdzNaVGK0",
@@ -258,6 +260,13 @@
     };
 
     const app = initializeApp(firebaseConfig);
+
+    // ربط وتفعيل حماية الـ reCAPTCHA v3 بمشروعك
+    initializeAppCheck(app, {
+        provider: new ReCaptchaV3Provider('6*************sbR'),
+        isTokenAutoRefreshEnabled: true
+    });
+
     const db = getFirestore(app);
     const auth = getAuth(app);
 
