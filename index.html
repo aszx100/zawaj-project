@@ -3,112 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الزواج الحديثة</title>
+    <title>منصة لتسكنوا - للزواج الإسلامي السعيد</title>
     <style>
         :root {
-            --primary: #ff477e;
-            --primary-hover: #e0396b;
-            --bg: #fff5f7;
-            --text: #2d3748;
+            --primary: #d81b60;
+            --primary-light: #f8bbd0;
+            --primary-hover: #ad1457;
+            --dark: #2c3e50;
+            --light: #fdfbfb;
+            --gray: #7f8c8d;
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; color: var(--text); }
-        .container { max-width: 650px; background: white; padding: 30px; margin: 40px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(255, 71, 126, 0.15); }
-        h1, h2 { color: var(--primary); font-weight: 700; margin-bottom: 20px; }
-        .form-group { text-align: right; margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
-        input, select, button { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 15px; transition: 0.3s; }
-        input:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(255, 71, 126, 0.2); }
-        button { background-color: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        button:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
-        .user-card { background: white; border: 1px solid #ffe1e9; padding: 15px; margin: 15px 0; border-radius: 10px; text-align: right; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f5f6fa; color: var(--dark); line-height: 1.6; }
+        .container { max-width: 1100px; margin: auto; padding: 20px; }
         .hidden { display: none !important; }
-        .nav-links { display: flex; justify-content: space-between; font-size: 14px; color: #718096; }
-        .nav-links a { color: var(--primary); cursor: pointer; text-decoration: none; font-weight: 600; }
-        .profile-box { background: #fffafb; border: 2px dashed var(--primary); padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: right; }
-        .logout-btn { background-color: #718096; max-width: 120px; padding: 8px; font-size: 14px; margin: 0; }
-        .logout-btn:hover { background-color: #4a5568; }
-        .header-area { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fff5f7; padding-bottom: 15px; margin-bottom: 25px; }
+        
+        /* 1. صفحة الهبوط */
+        .hero { background: linear-gradient(135deg, #fff1f4 0%, #ffe4e9 100%); padding: 80px 20px; text-align: center; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(216,27,96,0.05); }
+        .hero h1 { color: var(--primary); font-size: 2.5rem; margin-bottom: 15px; }
+        .hero p { color: var(--gray); font-size: 1.2rem; max-width: 600px; margin: 0 auto 30px auto; }
+        .hero-btns { display: flex; justify-content: center; gap: 15px; }
+        .btn { padding: 12px 30px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 1rem; }
+        .btn-main { background-color: var(--primary); color: white; }
+        .btn-main:hover { background-color: var(--primary-hover); }
+        .btn-sec { background-color: white; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-sec:hover { background-color: var(--primary-light); }
+
+        /* المميزات */
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 40px 0; }
+        .feat-card { background: white; padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
+        .feat-card h3 { color: var(--primary); margin-bottom: 10px; }
+
+        /* 2. قسم الحساب والـ Auth */
+        .auth-box { max-width: 450px; background: white; padding: 30px; margin: 50px auto; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; }
+        .form-group { text-align: right; margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark); font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; outline: none; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+
+        /* 3. لوحة التحكم والبحث */
+        .search-section { background: white; padding: 25px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
+        .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        
+        /* 4. الاستمارة المقسمة */
+        .form-section { background: white; padding: 35px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.02); }
+        .section-title { background: var(--primary-light); color: var(--primary-hover); padding: 10px 15px; border-radius: 6px; margin: 25px 0 15px 0; font-weight: bold; font-size: 1.1rem; text-align: right; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        /* بطاقات العرائس */
+        .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        .bride-card { background: white; border: 1px solid var(--primary-light); border-top: 5px solid var(--primary); padding: 20px; border-radius: 12px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.02); text-align: right; }
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px dashed var(--primary-light); padding-bottom: 10px; }
+        .code-tag { background: var(--primary); color: white; padding: 2px 10px; border-radius: 20px; font-weight: bold; font-size: 13px; }
+        .info-row { font-size: 14px; margin-bottom: 6px; }
+        .info-row strong { color: var(--primary-hover); }
+
+        .top-bar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 25px; border-radius: 12px; margin-bottom: 25px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- 1. واجهة تسجيل الدخول وإنشاء الحساب -->
-    <div id="authSection">
-        <h1 id="authTitle">تسجيل الدخول للمنصة</h1>
-        
-        <div class="form-group">
-            <label>البريد الإلكتروني</label>
-            <input type="email" id="authEmail" placeholder="name@example.com">
+
+    <!-- ================= 1. صفحة الهبوط العصرية ================= -->
+    <div id="landingPage">
+        <div class="hero">
+            <h1>منصة "لتسكنوا" للزواج الإسلامي</h1>
+            <p>منصة حديثة تعتمد على الخصوصية التامة ونظام الأكواد لربط القلوب وتيسير الحلال بكل أمان وجدية وبإشراف الإدارة.</p>
+            <div class="hero-btns">
+                <button class="btn btn-main" onclick="showAuth(true)">إنشاء حساب جديد</button>
+                <button class="btn btn-sec" onclick="showAuth(false)">تسجيل الدخول</button>
+            </div>
         </div>
-        
+
+        <div class="features">
+            <div class="feat-card">
+                <h3>🔒 خصوصية تامة</h3>
+                <p>لا يتم عرض الصور أو الأسماء الحقيقية؛ التعامل بالكامل يتم عبر نظام الأكواد المعتمدة.</p>
+            </div>
+            <div class="feat-card">
+                <h3>🔎 بحث وفلترة متطورة</h3>
+                <p>ابحث عن شريك الحياة المناسب بناءً على المحافظة، السن، المؤهل، والحالة الاجتماعية بسهولة.</p>
+            </div>
+            <div class="feat-card">
+                <h3>📝 استمارات مفصلة</h3>
+                <p>بيانات دقيقة تغطي الوضع الاجتماعي، العلمي، والعائلي لضمان الجدية والتوافق.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= 2. واجهة الدخول والتسجيل ================= -->
+    <div id="authSection" class="auth-box hidden">
+        <h2 id="authTitle">تسجيل الدخول</h2>
+        <div class="form-group" style="margin-top:20px;">
+            <label>البريد الإلكتروني</label>
+            <input type="email" id="authEmail" placeholder="example@email.com">
+        </div>
         <div class="form-group">
             <label>كلمة المرور</label>
             <input type="password" id="authPassword" placeholder="••••••••">
         </div>
-        
-        <button id="authBtn" onclick="handleAuth()">دخول</button>
-        
-        <div class="nav-links" style="margin-top: 15px;">
-            <span id="toggleText">ليس لديك حساب؟ <a onclick="toggleAuthMode(true)">إنشاء حساب جديد</a></span>
-        </div>
+        <button class="btn btn-main" style="width:100%" id="authBtn" onclick="handleAuth()">دخول</button>
+        <p style="margin-top:15px; font-size:14px;"><a id="toggleLink" onclick="toggleAuthMode()" style="color:var(--primary); cursor:pointer; font-weight:bold;">ليس لديك حساب؟ سجل الآن</a></p>
     </div>
 
-    <!-- 2. الواجهة الرئيسية بعد تسجيل الدخول -->
+
+    <!-- ================= 3. المنصة الرئيسية (بعد الدخول) ================= -->
     <div id="mainSection" class="hidden">
-        <div class="header-area">
-            <h1>منصة التوافق والزواج</h1>
-            <button class="logout-btn" onclick="logout()">خروج</button>
-        </div>
-
-        <!-- قسم ملفك الشخصي الحالي -->
-        <div class="profile-box">
-            <h3>👤 ملفك الشخصي الحالي:</h3>
-            <div id="currentProfile">جاري تحميل بيانات ملفك...</div>
-        </div>
         
-        <!-- استمارة تحديث البيانات -->
-        <div id="regForm">
-            <h3>📝 تحديث بيانات استمارتك</h3>
-            <div class="form-group">
-                <label>الاسم الكامل</label>
-                <input type="text" id="name" placeholder="اكتب اسمك الثلاثي">
+        <div class="top-bar">
+            <h2 style="color:var(--primary)">لوحة تحكم المنصة</h2>
+            <div>
+                <button class="btn btn-sec" style="padding: 7px 20px; font-size:14px;" onclick="switchTab('search')">🔎 تصفح وبحث</button>
+                <button class="btn btn-main" style="padding: 7px 20px; font-size:14px;" onclick="switchTab('form')">📝 استمارتي (عروسة)</button>
+                <button class="btn btn-sec" style="padding: 7px 20px; font-size:14px; background:#7f8c8d; color:white; border:none;" onclick="logout()">خروج</button>
             </div>
-            
-            <div class="form-group">
-                <label>الجنس</label>
-                <select id="gender">
-                    <option value="ذكر">ذكر</option>
-                    <option value="أنثى">أنثى</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>العمر</label>
-                <input type="number" id="age" placeholder="العمر الحالي">
-            </div>
-            
-            <div class="form-group">
-                <label>المدينة / الدولة</label>
-                <input type="text" id="city" placeholder="مثال: القاهرة، مصر">
-            </div>
-            
-            <button onclick="saveProfile()">حفظ وتحديث الاستمارة</button>
         </div>
 
-        <hr style="margin: 30px 0; border: 0; border-top: 2px solid #fff5f7;">
+        <!-- أ. تبويب البحث والتصفح -->
+        <div id="tabSearch">
+            <div class="search-section">
+                <h3>🔎 محرك البحث المتقدم</h3>
+                <div class="search-grid">
+                    <input type="text" id="searchId" placeholder="بحث برقم الكود..">
+                    <input type="text" id="searchGov" placeholder="المحافظة..">
+                    <select id="searchStatus">
+                        <option value="">الحالة الاجتماعية (الكل)</option>
+                        <option value="بكر">بكر</option>
+                        <option value="مطلقة">مطلقة</option>
+                        <option value="أرملة">أرملة</option>
+                    </select>
+                </div>
+                <button class="btn btn-main" style="margin-top:15px; width:150px; padding:8px;" onclick="loadUsers()">تطبيق الفلترة</button>
+            </div>
 
-        <h2>🔎 المشتركون المسجلون في المنصة</h2>
-        <div id="usersList">جاري تحميل قوائم المشتركين...</div>
+            <h2 style="margin-bottom:15px; text-align:right;">📋 طلبات العرائس المتاحة</h2>
+            <div id="usersList" class="cards-container">جاري جلب البيانات...</div>
+        </div>
+
+        <!-- ب. تبويب تعديل استمارة العروسة -->
+        <div id="tabForm" class="form-section hidden">
+            <h2>📝 تعديل بيانات العروسة</h2>
+            <p style="color:var(--gray); font-size:14px; margin-bottom:20px;">يرجى ملء البيانات بدقة، تعاملك مع الإدارة سيكون من خلال الكود الممنوح لكِ.</p>
+
+            <div class="grid-2">
+                <div class="form-group"><label>كود العروسة (يحدد من الإدارة)</label><input type="text" id="c_code" placeholder="مثال: B102"></div>
+                <div class="form-group"><label>اسم الأدمن المسؤول</label><input type="text" id="c_admin" placeholder="اسم منسق الحالة"></div>
+            </div>
+
+            <!-- أولاً -->
+            <div class="section-title">أولاً: المواصفات العامة</div>
+            <div class="grid-2">
+                <div class="form-group"><label>السن</label><input type="number" id="c_age"></div>
+                <div class="form-group"><label>الوزن</label><input type="number" id="c_weight"></div>
+                <div class="form-group"><label>الطول</label><input type="number" id="c_height"></div>
+                <div class="form-group"><label>لون البشرة</label><input type="text" id="c_skin"></div>
+            </div>
+            <div class="form-group"><label>هل تعانين من أي أمراض أو إعاقات؟</label><input type="text" id="c_illness"></div>
+
+            <!-- ثانياً -->
+            <div class="section-title">ثانياً: الوضع العلمي والوظيفي</div>
+            <div class="grid-2">
+                <div class="form-group"><label>المؤهل الدراسي</label><input type="text" id="c_edu"></div>
+                <div class="form-group"><label>العمل الفعلي</label><input type="text" id="c_job"></div>
+                <div class="form-group"><label>نوع العمل</label><input type="text" id="c_job_type"></div>
+                <div class="form-group"><label>المستوى المادي</label><select id="c_financial"><option>متوسط</option><option>جيد</option><option>ميسور</option></select></div>
+            </div>
+
+            <!-- ثالثاً -->
+            <div class="section-title">ثالثاً: وضع الحالة الاجتماعية</div>
+            <div class="grid-2">
+                <div class="form-group"><label>الحالة الاجتماعية</label><select id="c_status"><option>بكر</option><option>مطلقة</option><option>أرملة</option></select></div>
+                <div class="form-group"><label>هل سبق لكِ الارتباط؟ كم مرة؟</label><input type="text" id="c_married_times"></div>
+            </div>
+            <div class="form-group"><label>هل عندكِ رغبة في الإنجاب؟</label><input type="text" id="c_children_wish"></div>
+
+            <!-- رابعاً -->
+            <div class="section-title">رابعاً: بيانات الأسرة</div>
+            <div class="grid-2">
+                <div class="form-group"><label>عمل الوالد</label><input type="text" id="c_father_job"></div>
+                <div class="form-group"><label>عمل الوالدة</label><input type="text" id="c_mother_job"></div>
+            </div>
+            <div class="form-group"><label>عدد الإخوة والأخوات ومؤهلاتهم</label><textarea id="c_siblings" rows="2"></textarea></div>
+
+            <!-- خامساً -->
+            <div class="section-title">خامساً: بيانات السكن</div>
+            <div class="grid-2">
+                <div class="form-group"><label>محافظة المنشأ</label><input type="text" id="c_origin_gov"></div>
+                <div class="form-group"><label>محافظة الإقامة الحالية</label><input type="text" id="c_current_gov"></div>
+                <div class="form-group"><label>المنطقة</label><input type="text" id="c_zone"></div>
+                <div class="form-group"><label>شكل المنطقة (بندر / قرية .. إلخ)</label><input type="text" id="c_zone_type"></div>
+            </div>
+
+            <!-- سادساً -->
+            <div class="section-title">سادساً: بيانات أخرى</div>
+            <div class="grid-2">
+                <div class="form-group"><label>مستوى التدين</label><input type="text" id="c_religiosity"></div>
+                <div class="form-group"><label>المحافظة على الصلوات</label><input type="text" id="c_prayers"></div>
+                <div class="form-group"><label>نوع الحجاب</label><input type="text" id="c_hijab"></div>
+                <div class="form-group"><label>هل تلبسين بناطيل؟</label><input type="text" id="c_pants"></div>
+                <div class="form-group"><label>هل يوجد استعداد للنقاب؟</label><input type="text" id="c_niqab_ready"></div>
+                <div class="form-group"><label>هل تقبلين السفر إلى الخارج؟</label><input type="text" id="c_travel"></div>
+            </div>
+            <div class="form-group"><label>هل تقبلين أن تكوني زوجة ثانية؟</label><input type="text" id="c_second_wife"></div>
+            <div class="grid-2">
+                <div class="form-group"><label>من مرسل الاستمارة؟</label><input type="text" id="c_sender"></div>
+                <div class="form-group"><label>هل إرسال الاستمارة بعلم العروسة؟</label><input type="text" id="c_knowledge"></div>
+            </div>
+            <div class="form-group"><label>تكلمي عن نفسكِ (أو ما يقوله الناس عنكِ)</label><textarea id="c_about" rows="3"></textarea></div>
+
+            <!-- سابعاً -->
+            <div class="section-title">سابعاً: البيانات الخاصة بشريك الحياة</div>
+            <div class="grid-2">
+                <div class="form-group"><label>السن المناسب لكِ</label><input type="text" id="c_target_age"></div>
+                <div class="form-group"><label>لون البشرة المطلوب</label><input type="text" id="c_target_skin"></div>
+                <div class="form-group"><label>الحالة الاجتماعية المطلوبة</label><input type="text" id="c_target_status"></div>
+                <div class="form-group"><label>المؤهل المطلوب</label><input type="text" id="c_target_edu"></div>
+            </div>
+            <div class="form-group"><label>هل تقبلين بمطلق أو أرمل معه أطفال؟ (أو أطفاله في حضانة الأم؟)</label><input type="text" id="c_target_kids"></div>
+            <div class="form-group"><label>هل تقبلين من محافظة أخرى؟</label><input type="text" id="c_target_gov"></div>
+            <div class="form-group"><label>هل لديكِ شروط خاصة بـ (اللحية - التدخين - السكن)؟</label><input type="text" id="c_target_conds"></div>
+            <div class="form-group"><label>المواصفات العامة المطلوبة في شريك الحياة</label><textarea id="c_target_general" rows="2"></textarea></div>
+            
+            <div class="form-group"><label>هل ترغبون أن يجهز العريس شقته بالكامل ويدفع مهر ولن يمضي على قائمة منقولات؟</label><input type="text" id="c_no_list"></div>
+            <div class="form-group"><label>هل لديكِ إضافة أو ملحوظة؟</label><textarea id="c_notes" rows="2"></textarea></div>
+
+            <button class="btn btn-main" style="width:100%; margin-top:20px;" onclick="saveProfile()">💾 حفظ ونشر الاستمارة بالكود</button>
+        </div>
+
     </div>
 </div>
 
+<!-- تشغيل وإعداد Firebase لقاعدة البيانات والحسابات -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // إعدادات Firebase الخاصة بك
     const firebaseConfig = {
         apiKey: "AIzaSyDT9_qSGi7zsqLmscnGK7VNvIJdzNaVGK0",
         authDomain: "zawaj-site.firebaseapp.com",
@@ -123,124 +256,172 @@
     const auth = getAuth(app);
 
     let isSignUpMode = false;
-    let currentUserDocId = null;
+    let currentUserUid = null;
 
-    // التبديل بين تسجيل الدخول وإنشاء الحساب
-    window.toggleAuthMode = function(mode) {
-        isSignUpMode = mode;
+    window.showAuth = function(signUpMode) {
+        isSignUpMode = signUpMode;
+        document.getElementById('landingPage').classList.add('hidden');
+        document.getElementById('authSection').classList.remove('hidden');
         if(isSignUpMode) {
             document.getElementById('authTitle').innerText = "إنشاء حساب جديد";
-            document.getElementById('authBtn').innerText = "تسجيل الحساب";
-            document.getElementById('toggleText').innerHTML = 'لديك حساب بالفعل؟ <a onclick="toggleAuthMode(false)">تسجيل الدخول</a>';
+            document.getElementById('authBtn').innerText = "تسجيل حساب جديد";
+            document.getElementById('toggleLink').innerText = "لديك حساب بالفعل؟ سجل دخولك";
         } else {
-            document.getElementById('authTitle').innerText = "تسجيل الدخول للمنصة";
+            document.getElementById('authTitle').innerText = "تسجيل الدخول";
             document.getElementById('authBtn').innerText = "دخول";
-            document.getElementById('toggleText').innerHTML = 'ليس لديك حساب؟ <a onclick="toggleAuthMode(true)">إنشاء حساب جديد</a>';
+            document.getElementById('toggleLink').innerText = "ليس لديك حساب؟ سجل الآن";
         }
     }
 
-    // إدارة عمليات الدخول والتسجيل
+    window.toggleAuthMode = function() { showAuth(!isSignUpMode); }
+
     window.handleAuth = async function() {
         const email = document.getElementById('authEmail').value;
         const password = document.getElementById('authPassword').value;
-
-        if(!email || !password) { alert('يرجى إدخال البريد وكلمة المرور'); return; }
-
+        if(!email || !password) { alert('الرجاء إدخال البريد وكلمة المرور'); return; }
         try {
             if(isSignUpMode) {
                 await createUserWithEmailAndPassword(auth, email, password);
-                alert('تم إنشاء حسابك بنجاح!');
+                alert('تم إنشاء الحساب بنجاح!');
             } else {
                 await signInWithEmailAndPassword(auth, email, password);
             }
-        } catch (error) {
-            alert('خطأ: ' + error.message);
-        }
+        } catch(e) { alert('حدث خطأ: ' + e.message); }
     }
 
-    // مراقبة حالة المستخدم (هل سجل دخول أم لا؟)
     onAuthStateChanged(auth, (user) => {
-        if (user) {
-            currentUserDocId = user.uid;
+        if(user) {
+            currentUserUid = user.uid;
+            document.getElementById('landingPage').classList.add('hidden');
             document.getElementById('authSection').classList.add('hidden');
             document.getElementById('mainSection').classList.remove('hidden');
             loadCurrentProfile();
             loadUsers();
         } else {
-            currentUserDocId = null;
-            document.getElementById('authSection').classList.remove('hidden');
+            currentUserUid = null;
+            document.getElementById('landingPage').classList.remove('hidden');
+            document.getElementById('authSection').classList.add('hidden');
             document.getElementById('mainSection').classList.add('hidden');
         }
     });
 
-    // تسجيل الخروج
-    window.logout = function() {
-        signOut(auth);
+    window.logout = function() { signOut(auth); }
+
+    window.switchTab = function(tab) {
+        if(tab === 'search') {
+            document.getElementById('tabSearch').classList.remove('hidden');
+            document.getElementById('tabForm').classList.add('hidden');
+        } else {
+            document.getElementById('tabSearch').classList.add('hidden');
+            document.getElementById('tabForm').classList.remove('hidden');
+        }
     }
 
-    // حفظ أو تحديث الملف الشخصي للمستخدم الحالي فقط
+    // حفظ الاستمارة الشاملة للعروسة في الـ Database
     window.saveProfile = async function() {
-        const name = document.getElementById('name').value;
-        const gender = document.getElementById('gender').value;
-        const age = document.getElementById('age').value;
-        const city = document.getElementById('city').value;
-
-        if(!name || !age || !city) { alert('يرجى ملء كافة الخانات'); return; }
+        const profileData = {
+            code: document.getElementById('c_code').value,
+            admin: document.getElementById('c_admin').value,
+            age: document.getElementById('c_age').value,
+            weight: document.getElementById('c_weight').value,
+            height: document.getElementById('c_height').value,
+            skin: document.getElementById('c_skin').value,
+            illness: document.getElementById('c_illness').value,
+            edu: document.getElementById('c_edu').value,
+            job: document.getElementById('c_job').value,
+            job_type: document.getElementById('c_job_type').value,
+            financial: document.getElementById('c_financial').value,
+            status: document.getElementById('c_status').value,
+            married_times: document.getElementById('c_married_times').value,
+            children_wish: document.getElementById('c_children_wish').value,
+            father_job: document.getElementById('c_father_job').value,
+            mother_job: document.getElementById('c_mother_job').value,
+            siblings: document.getElementById('c_siblings').value,
+            origin_gov: document.getElementById('c_origin_gov').value,
+            current_gov: document.getElementById('c_current_gov').value,
+            zone: document.getElementById('c_zone').value,
+            zone_type: document.getElementById('c_zone_type').value,
+            religiosity: document.getElementById('c_religiosity').value,
+            prayers: document.getElementById('c_prayers').value,
+            hijab: document.getElementById('c_hijab').value,
+            pants: document.getElementById('c_pants').value,
+            niqab_ready: document.getElementById('c_niqab_ready').value,
+            travel: document.getElementById('c_travel').value,
+            second_wife: document.getElementById('c_second_wife').value,
+            sender: document.getElementById('c_sender').value,
+            knowledge: document.getElementById('c_knowledge').value,
+            about: document.getElementById('c_about').value,
+            target_age: document.getElementById('c_target_age').value,
+            target_skin: document.getElementById('c_target_skin').value,
+            target_status: document.getElementById('c_target_status').value,
+            target_edu: document.getElementById('c_target_edu').value,
+            target_kids: document.getElementById('c_target_kids').value,
+            target_gov: document.getElementById('c_target_gov').value,
+            target_conds: document.getElementById('c_target_conds').value,
+            target_general: document.getElementById('c_target_general').value,
+            no_list: document.getElementById('c_no_list').value,
+            notes: document.getElementById('c_notes').value
+        };
 
         try {
-            await setDoc(doc(db, "users", currentUserDocId), {
-                name: name,
-                gender: gender,
-                age: Number(age),
-                city: city
-            });
-            alert('تم حفظ وتحديث ملفك الشخصي بنجاح!');
-            loadCurrentProfile();
+            await setDoc(doc(db, "brides", currentUserUid), profileData);
+            alert('تم حفظ وتحديث البيانات بنجاح في نظام الأكواد!');
+            switchTab('search');
             loadUsers();
-        } catch (e) {
-            alert('خطأ أثناء الحفظ');
-        }
+        } catch(e) { alert('خطأ في الحفظ!'); }
     }
 
-    // تحميل بيانات المستخدم الحالي لعرضها في صندوق ملفه
     async function loadCurrentProfile() {
-        const docRef = doc(db, "users", currentUserDocId);
-        const docSnap = await getDoc(docRef);
-        const profileBox = document.getElementById('currentProfile');
-
-        if (docSnap.exists()) {
+        const docSnap = await getDoc(doc(db, "brides", currentUserUid));
+        if(docSnap.exists()) {
             const data = docSnap.data();
-            profileBox.innerHTML = `<strong>الاسم:</strong> ${data.name} | <strong>الجنس:</strong> ${data.gender} <br> <strong>العمر:</strong> ${data.age} سنة | <strong>الموقع:</strong> ${data.city}`;
-            // ملء الخانات تلقائياً لتسهيل التعديل
-            document.getElementById('name').value = data.name;
-            document.getElementById('gender').value = data.gender;
-            document.getElementById('age').value = data.age;
-            document.getElementById('city').value = data.city;
-        } else {
-            profileBox.innerHTML = `<span style="color: red;">لم تقم بملء بيانات استمارتك بعد، يرجى ملؤها بالأسفل لتظهر للمشتركين.</span>`;
+            for (const key in data) {
+                const element = document.getElementById('c_' + key);
+                if(element) element.value = data[key];
+            }
         }
     }
 
-    // جلب كافة المشتركين الآخرين
-    async function loadUsers() {
-        const querySnapshot = await getDocs(collection(db, "users"));
-        const usersList = document.getElementById('usersList');
-        usersList.innerHTML = '';
-        
+    // جلب البيانات وعمل الفلترة المتقدمة (البحث)
+    window.loadUsers = async function() {
+        const querySnapshot = await getDocs(collection(db, "brides"));
+        const listDiv = document.getElementById('usersList');
+        listDiv.innerHTML = '';
+
+        const filterId = document.getElementById('searchId').value.trim().toLowerCase();
+        const filterGov = document.getElementById('searchGov').value.trim();
+        const filterStatus = document.getElementById('searchStatus').value;
+
         querySnapshot.forEach((doc) => {
-            // عدم عرض حساب المستخدم الحالي في القائمة العامة
-            if(doc.id !== currentUserDocId) {
-                const data = doc.data();
-                const card = document.createElement('div');
-                card.className = 'user-card';
-                card.innerHTML = `<strong>الاسم:</strong> ${data.name} <br>
-                                  <strong>الجنس:</strong> ${data.gender} | <strong>العمر:</strong> ${data.age} سنة <br>
-                                  <strong>الموقع:</strong> ${data.city}`;
-                usersList.appendChild(card);
-            }
+            const data = doc.data();
+            
+            // تطبيق شروط الفلترة والبحث الفعلي
+            if(filterId && (!data.code || !data.code.toLowerCase().includes(filterId))) return;
+            if(filterGov && (!data.current_gov || !data.current_gov.includes(filterGov))) return;
+            if(filterStatus && data.status !== filterStatus) return;
+
+            const card = document.createElement('div');
+            card.className = 'bride-card';
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="code-tag">كود: ${data.code || 'غير محدد'}</span>
+                    <span style="font-size:12px; color:var(--gray)">الأدمن: ${data.admin || '--'}</span>
+                </div>
+                <div class="info-row"><strong>السن / الطول / الوزن:</strong> ${data.age || '--'} سنة | ${data.height || '--'} سم | ${data.weight || '--'} كجم</div>
+                <div class="info-row"><strong>المحافظة الحالية:</strong> ${data.current_gov || '--'} (${data.zone || '--'})</div>
+                <div class="info-row"><strong>الحالة الاجتماعية:</strong> ${data.status || '--'}</div>
+                <div class="info-row"><strong>المؤهل والعمل:</strong> ${data.edu || '--'} - ${data.job || 'لا تعمل'}</div>
+                <div class="info-row"><strong>نوع الحجاب والتدين:</strong> ${data.hijab || '--'} | ${data.prayers || '--'}</div>
+                <div class="info-row"><strong>عن العروسة:</strong> ${data.about || '--'}</div>
+                <div class="info-row" style="margin-top:10px; padding-top:5px; border-top:1fr dashed #ccc; font-size:12px; color:#ad1457">
+                    <strong>طلبها في الشريك:</strong> سن ${data.target_age || '--'} | بشرة ${data.target_skin || '--'} | مؤهل ${data.target_edu || '--'} | شروط: ${data.target_conds || 'لا يوجد'}
+                </div>
+            `;
+            listDiv.appendChild(card);
         });
-        if(usersList.innerHTML === '') {
-            usersList.innerHTML = '<p style="color:#718096;">لا يوجد مشتركين آخرين مسجلين حالياً.</p>';
+
+        if(listDiv.innerHTML === '') {
+            listDiv.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:var(--gray)">لا توجد استمارات تطابق خيارات البحث الحالية.</p>';
         }
     }
 </script>
