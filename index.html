@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع زواج</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; text-align: center; }
+        .container { max-width: 600px; background: white; padding: 20px; margin: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #d81b60; }
+        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #d81b60; color: white; border: none; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #ad1457; }
+        .user-card { background: #fff3f8; border: 1px solid #f8bbd0; padding: 15px; margin: 10px 0; border-radius: 6px; text-align: right; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>موقع الزواج والتوافق</h1>
+    <p>أدخل بياناتك للانضمام إلى المنصة</p>
+    
+    <div id="regForm">
+        <input type="text" id="name" placeholder="الاسم الكامل" required>
+        <select id="gender">
+            <option value="ذكر">ذكر</option>
+            <option value="أنثى">أنثى</option>
+        </select>
+        <input type="number" id="age" placeholder="العمر" required>
+        <input type="text" id="city" placeholder="المدينة/الدولة" required>
+        <button onclick="registerUser()">تسجيل البيانات</button>
+    </div>
+
+    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
+
+    <h2>المشتركون المسجلون حديثاً</h2>
+    <div id="usersList">تحميل البيانات...</div>
+</div>
+
+<!-- ربط مكتبات Firebase الأساسية -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // كود الربط السري الخاص بك
+    const firebaseConfig = {
+        apiKey: "AIzaSyDT9_qSGi7zsqLmscnGK7VNvIJdzNaVGK0",
+        authDomain: "zawaj-site.firebaseapp.com",
+        projectId: "zawaj-site",
+        storageBucket: "zawaj-site.firebasestorage.app",
+        messagingSenderId: "1044109583425",
+        appId: "1:1044109583425:web:8399d254e46e0ecf7ad2c0"
+    };
+
+    // تفعيل الـ Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // دالة إرسال البيانات لقاعدة البيانات
+    window.registerUser = async function() {
+        const name = document.getElementById('name').value;
+        const gender = document.getElementById('gender').value;
+        const age = document.getElementById('age').value;
+        const city = document.getElementById('city').value;
+
+        if(!name || !age || !city) {
+            alert('الرجاء ملء جميع الخانات');
+            return;
+        }
+
+        try {
+            await addDoc(collection(db, "users"), {
+                name: name,
+                gender: gender,
+                age: Number(age),
+                city: city,
+                timestamp: new Date()
+            });
+            alert('تم تسجيل بياناتك بنجاح!');
+            document.getElementById('name').value = '';
+            document.getElementById('age').value = '';
+            document.getElementById('city').value = '';
+            loadUsers();
+        } catch (e) {
+            console.error("خطأ أثناء الحفظ: ", e);
+            alert('حدث خطأ أثناء الحفظ، يرجى التأكد من إعدادات الحماية في Firebase');
+        }
+    }
+
+    // دالة جلب وعرض البيانات من قاعدة البيانات
+    async function loadUsers() {
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const usersList = document.getElementById('usersList');
+        usersList.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+            usersList.innerHTML = '<p>لا يوجد مشتركين مسجلين بعد.</p>';
+            return;
+        }
+
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const card = document.createElement('div');
+            card.className = 'user-card';
+            card.innerHTML = `<strong>الاسم:</strong> ${data.name} <br>
+                              <strong>الجنس:</strong> ${data.gender} | <strong>العمر:</strong> ${data.age} <br>
+                              <strong>الموقع:</strong> ${data.city}`;
+            usersList.appendChild(card);
+        });
+    }
+
+    // تحميل البيانات تلقائياً عند فتح الصفحة
+    loadUsers();
+</script>
+
+</body>
+</html>
