@@ -2,101 +2,34 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة لتسكنوا</title>
-    <style>
-        :root { --primary: #d81b60; --primary-light: #f8bbd0; --primary-hover: #ad1457; --dark: #2c3e50; --light: #f5f6fa; }
-        
-        /* الوضع المظلم (يُفعل عند دخول الإدارة) */
-        body.dark-mode { background-color: #121212 !important; color: #ffffff !important; }
-        body.dark-mode .bride-card, body.dark-mode .search-section, body.dark-mode .top-bar, body.dark-mode .form-section { background-color: #1e1e1e !important; color: #fff !important; border-color: #333 !important; }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: var(--light); color: var(--dark); transition: 0.3s; }
-        .container { max-width: 1100px; margin: auto; padding: 20px; }
-        .hidden { display: none !important; }
-        .bride-card { background: white; border: 1px solid var(--primary-light); border-top: 5px solid var(--primary); padding: 20px; border-radius: 12px; margin-bottom: 15px; }
-        .btn { padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; }
-        .btn-main { background-color: var(--primary); color: white; }
-    </style>
 </head>
 <body>
-
-<div class="container">
-    <div id="mainSection">
-        <h2 style="text-align:center; margin-bottom:20px;">📋 طلبات العرائس</h2>
-        <div id="usersList">جاري جلب البيانات...</div>
-    </div>
-</div>
-
-<!-- زر مخفي لدخول الإدارة (في أسفل الصفحة) -->
-<div style="text-align:center; margin-top:50px; opacity:0.1; cursor:pointer;" onclick="document.getElementById('admin-login-modal').style.display='block'">⚙️ الإعدادات</div>
-
-<!-- نافذة دخول الإدارة -->
-<div id="admin-login-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:30px; border:2px solid var(--primary); border-radius:15px; z-index:9999; box-shadow:0 0 20px rgba(0,0,0,0.5);">
-    <h3 style="color:var(--primary); margin-bottom:15px;">دخول لوحة الإدارة</h3>
-    <input type="password" id="admin-pass" placeholder="كلمة سر الإدارة" style="width:100%; padding:10px; margin-bottom:15px;">
-    <button onclick="checkAdmin()" class="btn btn-main" style="width:100%;">دخول</button>
-</div>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyDT9_qSGi7zsqLmscnGK7VNvIJdzNaVGK0",
-        projectId: "zawaj-site"
-    };
+    <div id="usersList">جاري جلب البيانات...</div>
     
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // التحقق من وضع الإدارة عند تحميل الصفحة
-    if (localStorage.getItem('isAdmin') === 'true') {
-        document.body.classList.add('dark-mode');
-    }
+        // تأكد من وضع بيانات مشروعك الحقيقية هنا
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT9_qSGi7zsqLmscnGK7VNvIJdzNaVGK0",
+            projectId: "zawaj-site"
+        };
 
-    // وظيفة جلب وعرض البيانات
-    window.loadUsers = async function() {
-        const listDiv = document.getElementById('usersList');
-        try {
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadUsers() {
+            const listDiv = document.getElementById('usersList');
             const querySnapshot = await getDocs(collection(db, "brides"));
             listDiv.innerHTML = '';
-            querySnapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                const card = document.createElement('div');
-                card.className = 'bride-card';
-                card.innerHTML = `
-                    <div style="font-weight:bold; margin-bottom:10px;">كود العروسة: ${data.code || '--'}</div>
-                    <div style="font-size:14px; margin-bottom:10px;">السن: ${data.age || '--'} سنة</div>
-                    ${localStorage.getItem('isAdmin') === 'true' ? `<button style="background:red; color:white; border:none; padding:5px 15px; border-radius:5px; cursor:pointer;" onclick="deleteCard('${docSnap.id}')">حذف الاستمارة</button>` : ''}
-                `;
-                listDiv.appendChild(card);
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                listDiv.innerHTML += `<div>كود العروسة: ${data.code || '--'}</div>`;
             });
-        } catch (e) { listDiv.innerHTML = "خطأ في تحميل البيانات."; }
-    }
-
-    // وظيفة الحذف
-    window.deleteCard = async function(id) {
-        if(confirm('هل أنت متأكد من حذف هذه الاستمارة؟')) {
-            await deleteDoc(doc(db, "brides", id));
-            location.reload();
         }
-    }
-
-    // وظيفة دخول الإدارة
-    window.checkAdmin = function() {
-        const pass = document.getElementById('admin-pass').value;
-        if(pass === '123456') {
-            localStorage.setItem('isAdmin', 'true');
-            location.reload();
-        } else {
-            alert('كلمة سر خاطئة!');
-        }
-    }
-
-    loadUsers();
-</script>
-
+        loadUsers();
+    </script>
 </body>
 </html>
