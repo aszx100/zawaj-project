@@ -3,46 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقع زواج</title>
+    <title>منصة الزواج الحديثة</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; text-align: center; }
-        .container { max-width: 600px; background: white; padding: 20px; margin: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { color: #d81b60; }
-        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { background-color: #d81b60; color: white; border: none; font-size: 16px; cursor: pointer; }
-        button:hover { background-color: #ad1457; }
-        .user-card { background: #fff3f8; border: 1px solid #f8bbd0; padding: 15px; margin: 10px 0; border-radius: 6px; text-align: right; }
+        :root {
+            --primary: #ff477e;
+            --primary-hover: #e0396b;
+            --bg: #fff5f7;
+            --text: #2d3748;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); margin: 0; padding: 20px; color: var(--text); }
+        .container { max-width: 650px; background: white; padding: 30px; margin: 40px auto; border-radius: 16px; box-shadow: 0 10px 25px rgba(255, 71, 126, 0.15); }
+        h1, h2 { color: var(--primary); font-weight: 700; margin-bottom: 20px; }
+        .form-group { text-align: right; margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        input, select, button { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 15px; transition: 0.3s; }
+        input:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(255, 71, 126, 0.2); }
+        button { background-color: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+        .user-card { background: white; border: 1px solid #ffe1e9; padding: 15px; margin: 15px 0; border-radius: 10px; text-align: right; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .hidden { display: none !important; }
+        .nav-links { display: flex; justify-content: space-between; font-size: 14px; color: #718096; }
+        .nav-links a { color: var(--primary); cursor: pointer; text-decoration: none; font-weight: 600; }
+        .profile-box { background: #fffafb; border: 2px dashed var(--primary); padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: right; }
+        .logout-btn { background-color: #718096; max-width: 120px; padding: 8px; font-size: 14px; margin: 0; }
+        .logout-btn:hover { background-color: #4a5568; }
+        .header-area { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #fff5f7; padding-bottom: 15px; margin-bottom: 25px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>موقع الزواج والتوافق</h1>
-    <p>أدخل بياناتك للانضمام إلى المنصة</p>
-    
-    <div id="regForm">
-        <input type="text" id="name" placeholder="الاسم الكامل" required>
-        <select id="gender">
-            <option value="ذكر">ذكر</option>
-            <option value="أنثى">أنثى</option>
-        </select>
-        <input type="number" id="age" placeholder="العمر" required>
-        <input type="text" id="city" placeholder="المدينة/الدولة" required>
-        <button onclick="registerUser()">تسجيل البيانات</button>
+    <!-- 1. واجهة تسجيل الدخول وإنشاء الحساب -->
+    <div id="authSection">
+        <h1 id="authTitle">تسجيل الدخول للمنصة</h1>
+        
+        <div class="form-group">
+            <label>البريد الإلكتروني</label>
+            <input type="email" id="authEmail" placeholder="name@example.com">
+        </div>
+        
+        <div class="form-group">
+            <label>كلمة المرور</label>
+            <input type="password" id="authPassword" placeholder="••••••••">
+        </div>
+        
+        <button id="authBtn" onclick="handleAuth()">دخول</button>
+        
+        <div class="nav-links" style="margin-top: 15px;">
+            <span id="toggleText">ليس لديك حساب؟ <a onclick="toggleAuthMode(true)">إنشاء حساب جديد</a></span>
+        </div>
     </div>
 
-    <hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
+    <!-- 2. الواجهة الرئيسية بعد تسجيل الدخول -->
+    <div id="mainSection" class="hidden">
+        <div class="header-area">
+            <h1>منصة التوافق والزواج</h1>
+            <button class="logout-btn" onclick="logout()">خروج</button>
+        </div>
 
-    <h2>المشتركون المسجلون حديثاً</h2>
-    <div id="usersList">تحميل البيانات...</div>
+        <!-- قسم ملفك الشخصي الحالي -->
+        <div class="profile-box">
+            <h3>👤 ملفك الشخصي الحالي:</h3>
+            <div id="currentProfile">جاري تحميل بيانات ملفك...</div>
+        </div>
+        
+        <!-- استمارة تحديث البيانات -->
+        <div id="regForm">
+            <h3>📝 تحديث بيانات استمارتك</h3>
+            <div class="form-group">
+                <label>الاسم الكامل</label>
+                <input type="text" id="name" placeholder="اكتب اسمك الثلاثي">
+            </div>
+            
+            <div class="form-group">
+                <label>الجنس</label>
+                <select id="gender">
+                    <option value="ذكر">ذكر</option>
+                    <option value="أنثى">أنثى</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>العمر</label>
+                <input type="number" id="age" placeholder="العمر الحالي">
+            </div>
+            
+            <div class="form-group">
+                <label>المدينة / الدولة</label>
+                <input type="text" id="city" placeholder="مثال: القاهرة، مصر">
+            </div>
+            
+            <button onclick="saveProfile()">حفظ وتحديث الاستمارة</button>
+        </div>
+
+        <hr style="margin: 30px 0; border: 0; border-top: 2px solid #fff5f7;">
+
+        <h2>🔎 المشتركون المسجلون في المنصة</h2>
+        <div id="usersList">جاري تحميل قوائم المشتركين...</div>
+    </div>
 </div>
 
-<!-- ربط مكتبات Firebase الأساسية -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // كود الربط السري الخاص بك
+    // إعدادات Firebase الخاصة بك
     const firebaseConfig = {
         apiKey: "AIzaSyDT9_qSGi7zsqLmscnGK7VNvIJdzNaVGK0",
         authDomain: "zawaj-site.firebaseapp.com",
@@ -52,65 +118,131 @@
         appId: "1:1044109583425:web:8399d254e46e0ecf7ad2c0"
     };
 
-    // تفعيل الـ Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    // دالة إرسال البيانات لقاعدة البيانات
-    window.registerUser = async function() {
+    let isSignUpMode = false;
+    let currentUserDocId = null;
+
+    // التبديل بين تسجيل الدخول وإنشاء الحساب
+    window.toggleAuthMode = function(mode) {
+        isSignUpMode = mode;
+        if(isSignUpMode) {
+            document.getElementById('authTitle').innerText = "إنشاء حساب جديد";
+            document.getElementById('authBtn').innerText = "تسجيل الحساب";
+            document.getElementById('toggleText').innerHTML = 'لديك حساب بالفعل؟ <a onclick="toggleAuthMode(false)">تسجيل الدخول</a>';
+        } else {
+            document.getElementById('authTitle').innerText = "تسجيل الدخول للمنصة";
+            document.getElementById('authBtn').innerText = "دخول";
+            document.getElementById('toggleText').innerHTML = 'ليس لديك حساب؟ <a onclick="toggleAuthMode(true)">إنشاء حساب جديد</a>';
+        }
+    }
+
+    // إدارة عمليات الدخول والتسجيل
+    window.handleAuth = async function() {
+        const email = document.getElementById('authEmail').value;
+        const password = document.getElementById('authPassword').value;
+
+        if(!email || !password) { alert('يرجى إدخال البريد وكلمة المرور'); return; }
+
+        try {
+            if(isSignUpMode) {
+                await createUserWithEmailAndPassword(auth, email, password);
+                alert('تم إنشاء حسابك بنجاح!');
+            } else {
+                await signInWithEmailAndPassword(auth, email, password);
+            }
+        } catch (error) {
+            alert('خطأ: ' + error.message);
+        }
+    }
+
+    // مراقبة حالة المستخدم (هل سجل دخول أم لا؟)
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUserDocId = user.uid;
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('mainSection').classList.remove('hidden');
+            loadCurrentProfile();
+            loadUsers();
+        } else {
+            currentUserDocId = null;
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('mainSection').classList.add('hidden');
+        }
+    });
+
+    // تسجيل الخروج
+    window.logout = function() {
+        signOut(auth);
+    }
+
+    // حفظ أو تحديث الملف الشخصي للمستخدم الحالي فقط
+    window.saveProfile = async function() {
         const name = document.getElementById('name').value;
         const gender = document.getElementById('gender').value;
         const age = document.getElementById('age').value;
         const city = document.getElementById('city').value;
 
-        if(!name || !age || !city) {
-            alert('الرجاء ملء جميع الخانات');
-            return;
-        }
+        if(!name || !age || !city) { alert('يرجى ملء كافة الخانات'); return; }
 
         try {
-            await addDoc(collection(db, "users"), {
+            await setDoc(doc(db, "users", currentUserDocId), {
                 name: name,
                 gender: gender,
                 age: Number(age),
-                city: city,
-                timestamp: new Date()
+                city: city
             });
-            alert('تم تسجيل بياناتك بنجاح!');
-            document.getElementById('name').value = '';
-            document.getElementById('age').value = '';
-            document.getElementById('city').value = '';
+            alert('تم حفظ وتحديث ملفك الشخصي بنجاح!');
+            loadCurrentProfile();
             loadUsers();
         } catch (e) {
-            console.error("خطأ أثناء الحفظ: ", e);
-            alert('حدث خطأ أثناء الحفظ، يرجى التأكد من إعدادات الحماية في Firebase');
+            alert('خطأ أثناء الحفظ');
         }
     }
 
-    // دالة جلب وعرض البيانات من قاعدة البيانات
+    // تحميل بيانات المستخدم الحالي لعرضها في صندوق ملفه
+    async function loadCurrentProfile() {
+        const docRef = doc(db, "users", currentUserDocId);
+        const docSnap = await getDoc(docRef);
+        const profileBox = document.getElementById('currentProfile');
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            profileBox.innerHTML = `<strong>الاسم:</strong> ${data.name} | <strong>الجنس:</strong> ${data.gender} <br> <strong>العمر:</strong> ${data.age} سنة | <strong>الموقع:</strong> ${data.city}`;
+            // ملء الخانات تلقائياً لتسهيل التعديل
+            document.getElementById('name').value = data.name;
+            document.getElementById('gender').value = data.gender;
+            document.getElementById('age').value = data.age;
+            document.getElementById('city').value = data.city;
+        } else {
+            profileBox.innerHTML = `<span style="color: red;">لم تقم بملء بيانات استمارتك بعد، يرجى ملؤها بالأسفل لتظهر للمشتركين.</span>`;
+        }
+    }
+
+    // جلب كافة المشتركين الآخرين
     async function loadUsers() {
         const querySnapshot = await getDocs(collection(db, "users"));
         const usersList = document.getElementById('usersList');
         usersList.innerHTML = '';
         
-        if (querySnapshot.empty) {
-            usersList.innerHTML = '<p>لا يوجد مشتركين مسجلين بعد.</p>';
-            return;
-        }
-
         querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const card = document.createElement('div');
-            card.className = 'user-card';
-            card.innerHTML = `<strong>الاسم:</strong> ${data.name} <br>
-                              <strong>الجنس:</strong> ${data.gender} | <strong>العمر:</strong> ${data.age} <br>
-                              <strong>الموقع:</strong> ${data.city}`;
-            usersList.appendChild(card);
+            // عدم عرض حساب المستخدم الحالي في القائمة العامة
+            if(doc.id !== currentUserDocId) {
+                const data = doc.data();
+                const card = document.createElement('div');
+                card.className = 'user-card';
+                card.innerHTML = `<strong>الاسم:</strong> ${data.name} <br>
+                                  <strong>الجنس:</strong> ${data.gender} | <strong>العمر:</strong> ${data.age} سنة <br>
+                                  <strong>الموقع:</strong> ${data.city}`;
+                usersList.appendChild(card);
+            }
         });
+        if(usersList.innerHTML === '') {
+            usersList.innerHTML = '<p style="color:#718096;">لا يوجد مشتركين آخرين مسجلين حالياً.</p>';
+        }
     }
-
-    // تحميل البيانات تلقائياً عند فتح الصفحة
-    loadUsers();
 </script>
 
 </body>
